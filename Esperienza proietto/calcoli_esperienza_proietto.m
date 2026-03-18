@@ -75,3 +75,4 @@ g_teo = 2 .* sin(2 .* angoli) .* (U_mg_med - dx .* sin(angoli));
 
 % Incertezza gittata teorica
 sigma_g_teo = 2 .* sin(2 .* angoli) .* sigma_U_mg_med;
+%scemo chi legge
