@@ -6,7 +6,7 @@
 clear
 clc
 
-%--- ANALISI DATI ---%
+% --- ANALISI DATI --- %
 
 % Eseguo il file startup.m, contiene variabili generalmente utili
 run('/Users/giacomovanzelli/MATLAB/startup.m');
@@ -15,7 +15,7 @@ run('/Users/giacomovanzelli/MATLAB/startup.m');
 g = g * 100;
 
 % Importo i dati
-T = readmatrix('dati_esperienza_proietto.csv');
+T = readmatrix('/Users/giacomovanzelli/MATLAB/Esperienza proietto/dati.csv');
 
 % Profondità canna cannone
 dx = 4.6;
@@ -28,6 +28,7 @@ ris_a = deg2rad(1);
 % Errori riferiti alle risoluzioni
 err_ris_g = ris_g / sqrt(12);
 err_ris_a = ris_a / sqrt(12);
+err_ris_dx = dx / sqrt(12);
 
 % Vettori gittate
 g_25_vet = sum(T(T(:,1) == 25, 2:end),2);
@@ -50,7 +51,7 @@ err_g_med = dev_std_g ./ sqrt(size(g_vet, 1));
 % Incertezza totale
 err_tot = sqrt(sigma_g^2 + err_g_med.^2);
 
-%--- CALCOLI ---%
+% --- CALCOLI --- %
 
 % Gittata caratteristica del sistema cannone-palla
 U_mg = g_med ./ (2 .* sin(2 .* angoli)) + dx .* sin(angoli);
