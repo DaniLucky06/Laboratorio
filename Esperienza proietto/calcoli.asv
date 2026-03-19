@@ -63,7 +63,7 @@ dU_mg_dg_med = 1 ./ (2 .* sin(2 .* angoli));
 dU_mg_da = dx .* cos(angoli) - g_med .* cos(2 .* angoli) ./ sin(2 .* angoli).^2;
 
 % derivate parziali rispetto a dx
-dU_mg_ddx = cos(angoli);
+dU_mg_ddx = cos(agoli);
 
 % Incertezza U_mg
 sigma_U_mg = sqrt((dU_mg_dg_med .* err_tot).^2 + (dU_mg_da .* err_ris_a).^2 + (dU_mg_ddx .* err_ris_dx).^2);
