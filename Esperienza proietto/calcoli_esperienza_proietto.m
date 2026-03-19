@@ -1,6 +1,4 @@
 % LE MISURE DI LUNGHEZZA SONO TUTTE IN CENTIMETRI
-% CON SIGMA INTENDIAMO L'ERRORE STRUMENTALE
-% CON DEV_STD INTENDIAMO LA DEVIAZIONE STANDARD
 
 % Pulisco la console e svuoto le variabili
 clear
@@ -17,7 +15,7 @@ g = g * 100;
 % Importo i dati
 T = readmatrix('/Users/giacomovanzelli/MATLAB/Esperienza proietto/dati.csv');
 
-% Profondità canna cannone
+% Dati non presenti nel file
 dx = 4.6;
 angoli = deg2rad([25, 45, 65]);
 
@@ -63,7 +61,7 @@ dU_mg_dg_med = 1 ./ (2 .* sin(2 .* angoli));
 dU_mg_da = dx .* cos(angoli) - g_med .* cos(2 .* angoli) ./ sin(2 .* angoli).^2;
 
 % derivate parziali rispetto a dx
-dU_mg_ddx = cos(agoli);
+dU_mg_ddx = cos(angoli);
 
 % Incertezza U_mg
 sigma_U_mg = sqrt((dU_mg_dg_med .* err_tot).^2 + (dU_mg_da .* err_ris_a).^2 + (dU_mg_ddx .* err_ris_dx).^2);
