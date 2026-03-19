@@ -18,7 +18,6 @@ metro_tav_perno = 761;
 metro_tav_massa = 41;
 calibro_massa = 19.05;
 n_misure = 100;
-g = 9.80665;
 
 % Risoluzioni degli strumenti utilizzati
 ris_t = .01;
@@ -37,7 +36,7 @@ t_vet = t5_vet ./ 5;
 % Periodi medi
 t_vet_med = mean(t_vet, 1);
 
-t_med = mean(t_vet, "all")
+t_med = mean(t_vet, "all");
 
 % Deviazione standard sui dati
 dev_std_t_vet = std(t_vet, 1, "all");
@@ -46,7 +45,7 @@ dev_std_t_vet = std(t_vet, 1, "all");
 dev_std_t_med = dev_std_t_vet / sqrt(n_misure);
 
 % Incertezza totale
-err_tot_t = rssq([dev_std_t_med, err_ris_t])
+err_tot_t = rssq([dev_std_t_med, err_ris_t]);
 
 % --- CALCOLI --- %
 
@@ -57,7 +56,7 @@ l = metro_tav_perno - (metro_tav_massa + calibro_massa / 2);
 err_ris_l = rssq([err_ris_metro, err_ris_metro, err_ris_calibro]);
 
 % Periodo atteso
-t_att = 2 * pi * sqrt(l / (g * 1000))
+t_att = 2 * pi * sqrt(l / (g * 1000));
 
 % Incertezza sul t_att
-dev_std_t_att = pi * err_ris_l / sqrt(g * 1000 * l)
+dev_std_t_att = pi * err_ris_l / sqrt(g * 1000 * l);
