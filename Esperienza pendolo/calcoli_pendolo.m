@@ -8,10 +8,10 @@ clc
 % --- ANALISI DATI --- %
 
 % Eseguo il file startup.m, contiene variabili generalmente utili
-run('/Users/giacomovanzelli/MATLAB/startup.m');
+run('startup.m');
 
 % Importo i dati
-T = readmatrix('/Users/giacomovanzelli/MATLAB/Esperienza pendolo/dati.csv');
+T = readmatrix('dati_pendolo.csv');
 
 % Dati non presenti nel file
 metro_tav_perno = 761;
@@ -45,7 +45,7 @@ dev_std_t_vet = std(t_vet, 1, "all");
 dev_std_t_med = dev_std_t_vet / sqrt(n_misure);
 
 % Incertezza totale
-err_tot_t = rssq([dev_std_t_med, err_ris_t]);
+err_tot_t = sqrt(dev_std_t_med.^2 + err_ris_t.^2);
 
 % --- CALCOLI --- %
 
@@ -53,7 +53,7 @@ err_tot_t = rssq([dev_std_t_med, err_ris_t]);
 l = metro_tav_perno - (metro_tav_massa + calibro_massa / 2);
 
 % Incertezza della risolizione di l
-err_ris_l = rssq([err_ris_metro, err_ris_metro, err_ris_calibro]);
+err_ris_l = sqrt(err_ris_metro.^2 + err_ris_metro.^2 + err_ris_calibro.^2);
 
 % Periodo atteso
 t_att = 2 * pi * sqrt(l / (g * 1000));

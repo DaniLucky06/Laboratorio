@@ -1,19 +1,16 @@
 % LE MISURE DI LUNGHEZZA SONO TUTTE IN CENTIMETRI
 
 % Pulisco la console e svuoto le variabili
-clear
-clc
+%clear, clc
 
 % --- ANALISI DATI --- %
-
-% Eseguo il file startup.m, contiene variabili generalmente utili
-run('..\startup.m');
+run('startup.m');
 
 % Per sicurezza
 g = g * 100;
 
 % Importo i dati
-T = readmatrix('.\dati.csv');
+T = readmatrix('dati_proietto.csv');
 
 % Dati non presenti nel file
 dx = 4.6;
@@ -72,31 +69,22 @@ U_mg_med = mean(U_mg);
 % Incertezza su U_mg medio
 sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)); % da rssq, che è un addon, a sqrt(dot())
 
-% Gittata considerando U_mg
-g_teo = 2 .* sin(2 .* angoli) .* (U_mg_med - dx .* sin(angoli));
+% Gittata considerando U_mg -- FUNZIONE -> PRENDE UN ARRAY O UNO SCALARE IN
+% INPUT
+g_teo = @(theta) 2 .* sin(2 .* theta) .* (U_mg_med - dx .* sin(theta));
 
-% Incertezza gittata teorica
-sigma_g_teo = 2 .* sin(2 .* angoli) .* sigma_U_mg_med;
+% Incertezza gittata teorica -- FUNZIONE -> PRENDE UN ARRAY O UNO SCALARE
+% IN INPUT
+sigma_g_teo = @(theta) 2 .* sin(2 .* theta) .* sigma_U_mg_med;
 
 
 % --- SEZIONE RIGUARDO ALLA CORREZIONE DELL'ANGOLO --- %
-
-% array con i valori di U_mg per i tre angoli, in funzione dell'offset
-U_delta = @(delta) g_med ./ (2 .* sin(2 .* (angoli + delta))) + dx .* sin(angoli + delta);
-
-% media delle U in funzione dell'offset
-U_med_delta = @(delta) mean(U_delta(delta));
-
-error = @(delta) dot(U_delta(delta) - U_med_delta(delta), U_delta(delta) - U_med_delta(delta));
-
-optimal_delta = rad2deg(fminunc(error, 0))
-
 
 % array delle 3 derivate di U_mg [25, 45, 65] rispetto a delta (fattore di
 % offset) serviranno per minimizzare l'errore quadrato compiuto in funzione
 % di delta
 function y = U_prime(delta, g_med, angoli, dx)
-    y = dx .* cos(delta + angoli) - g_med ./ 2 .* (2 .* cos(2 .* (delta + angoli))) / ((sin(2.*(delta + angoli)) .^ 2));
+    y = dx .* cos(delta + angoli) - g_med ./ 2 .* (2 .* cos(2 .* (delta + angoli))) ./ ((sin(2.*(delta + angoli)) .^ 2));
 end
 
 % media delle derivate = derivata della media, serve per l'errore
@@ -109,10 +97,22 @@ end
 % varianza fra U_mg(delta) e U_mg_mean(delta). Ciò, passando per i calcoli,
 % significa porre uguale a 0 il prodotto scalare fra U_mg - U_mg_med e le
 % derivate:
-
-function y = to_minimize(delta, U_mg, U_mg_med, g_med, angoli, dx)
-    y = dot(U_mg - U_mg_med, U_prime(delta, g_med, angoli, dx) - U_mean_prime(delta, g_med, angoli, dx));
+function y = to_minimize(delta, g_med, angoli, dx)
+    U_curr = g_med ./ (2 .* sin(2 .* (angoli + delta))) + dx .* sin(angoli + delta);
+    U_med_curr = mean(U_curr);
+    y = dot(U_curr - U_med_curr, U_prime(delta, g_med, angoli, dx) - U_mean_prime(delta, g_med, angoli, dx));
 end
 
-fun = @(x) to_minimize(x, U_mg, U_mg_med, g_med, angoli, dx);
-delta_optimal = fzero(fun, 0)
+fun = @(x) to_minimize(x, g_med, angoli, dx);
+delta_optimal = fzero(fun, 0);
+
+% ___ALTERNATIVA, USANDO DIRETTAMENTE LA FUNZIONE MATLAB___ %
+% % array con i valori di U_mg per i tre angoli, in funzione dell'offset
+% U_delta = @(delta) g_med ./ (2 .* sin(2 .* (angoli + delta))) + dx .* sin(angoli + delta);
+% 
+% % media delle U in funzione dell'offset
+% U_med_delta = @(delta) mean(U_delta(delta));
+% 
+% error = @(delta) dot(U_delta(delta) - U_med_delta(delta), U_delta(delta) - U_med_delta(delta));
+% 
+% delta_optimal = fminunc(error, 0)

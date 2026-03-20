@@ -3,7 +3,7 @@ clear
 clc
 
 % Eseguo i calcoli necessari
-run('/Users/giacomovanzelli/MATLAB/Esperienza pendolo/calcoli.m');
+run('calcoli_pendolo.m');
 
 % Linearizzo la matrice t_vet in un vettore riga per il grafico
 t_dati = t_vet(:)';

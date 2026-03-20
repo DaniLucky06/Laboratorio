@@ -1,19 +1,28 @@
 % LE MISURE DI LUNGHEZZA SONO TUTTE IN CENTIMETRI
 
 % Pulisco la console e svuoto le variabili
-clear
-clc
+clear, clc
 
 % --- ANALISI DATI --- %
 
 % Eseguo il file startup.m, contiene variabili generalmente utili
-run('..\startup.m');
+% --- CALCOLI.M ---
+% 1. Trovo la cartella esatta in cui si trova calcoli.m (Esperienza proietto)
+[cartella_calcoli, ~, ~] = fileparts(mfilename('fullpath'));
+
+% 2. Costruisco il percorso per startup.m andando su di un livello ('..')
+percorso_startup = fullfile(cartella_calcoli, '..', 'startup.m');
+run(percorso_startup);
+
+% 3. Costruisco il percorso esatto per caricare i dati (stessa cartella)
+percorso_dati = fullfile(cartella_calcoli, 'dati.csv');
+T = readmatrix(percorso_dati);
 
 % Per sicurezza
 g = g * 100;
 
 % Importo i dati
-T = readmatrix('.\dati.csv');
+T = readmatrix('Esperienza proietto\dati.csv');
 
 % Dati non presenti nel file
 dx = 4.6;
@@ -73,7 +82,7 @@ U_mg_med = mean(U_mg);
 sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)); % da rssq, che è un addon, a sqrt(dot())
 
 % Gittata considerando U_mg
-g_teo = 2 .* sin(2 .* angoli) .* (U_mg_med - dx .* sin(angoli));
+g_teo = @(angoli) 2 .* sin(2 .* angoli) .* (U_mg_med - dx .* sin(angoli));
 
 % Incertezza gittata teorica
 sigma_g_teo = 2 .* sin(2 .* angoli) .* sigma_U_mg_med;

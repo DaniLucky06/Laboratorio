@@ -3,7 +3,7 @@ clear
 clc
 
 % Eseguo i calcoli necessari
-run('/Users/giacomovanzelli/MATLAB/Esperienza proietto/calcoli.m');
+run('calcoli_proietto.m');
 
 % Vettori per l'asse X (numero progressivo del lancio per ciascun angolo)
 n_25 = 1:length(g_25_vet);

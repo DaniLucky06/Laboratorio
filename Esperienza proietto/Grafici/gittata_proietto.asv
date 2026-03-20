@@ -1,0 +1,64 @@
+clc, clear
+run('calcoli_proietto.m');
+
+% angolo di offset ideale
+offset = delta_optimal;
+
+% GRAFICA
+wid = 2;
+col2 = 'red';
+col3 = 'green';
+
+% vogliamo plottare:
+
+%   1) la gittata in funzione dell'angolo senza correzzione energia
+g_theta = @(theta) mean(g_med ./ sin(2 .* angoli)) .* sin(2 .* theta);
+
+%   2) la gittata con correzione energia --> g_teo(theta)
+
+%   3) la gittata con correzione energia e offset angolo
+U_mg_theta_offset = mean(g_med ./ (2 .* sin(2 .* (angoli + offset))) + dx .* sin(angoli + offset));
+g_teo_offset = @(theta) 2 .* sin(2 .* (theta + offset)) .* (U_mg_theta_offset - dx .* sin(theta + offset));
+
+sigma_U_mg_offset = @(theta, off) 2 .* sin(2 .* (theta + off)) .* sigma_U_mg_med;
+
+% disegnare i grafici
+x = 20:1:70;
+x_rad = deg2rad(x);
+x_fill = [x, fliplr(x)];
+
+figure;
+hold on;
+% grafico 2)
+y2 = g_teo(x_rad);
+y_upper2 = y2 + sigma_U_mg_offset(x_rad, 0);
+y_lower2 = y2 - sigma_U_mg_offset(x_rad, 0);
+y_fill = [y_upper2, fliplr(y_lower2)];
+fill(x_fill, y_fill, col2, 'FaceAlpha', 0.3, 'DisplayName', 'Previsione senza offset angolo', 'EdgeColor', 'none');
+
+col = 'red';
+plot(x, y2, col2, 'LineWidth', wid, 'HandleVisibility', 'off');
+
+
+% grafico 3)
+y3 = g_teo_offset(x_rad);
+y_upper3 = y3 + sigma_U_mg_offset(x_rad, offset);
+y_lower3 = y3 - sigma_U_mg_offset(x_rad, offset);
+y_fill = [y_upper3, fliplr(y_lower3)];
+fill(x_fill, y_fill, col3, 'FaceAlpha', 0.3, 'DisplayName', 'Previsione corretta', 'EdgeColor', 'none');
+
+plot(x, y3, col3, 'LineWidth', wid, 'HandleVisibility', 'off');
+
+
+% grafico 1)
+plot(x, g_theta(x_rad), '--c', 'LineWidth', wid, 'DisplayName', 'Previsione iniziale');
+
+% plotta i punti misurati
+errorbar(rad2deg(angoli), g_med, err_tot, err_tot, err_ris_a, err_ris_a, 'ko', 'MarkerFaceColor', 'r', 'LineWidth', .5, 'MarkerSize', 1, 'HandleVisibility', 'off');
+
+% Dettagli estetici finali
+xlabel('Angolo di lancio [Gradi]');
+ylabel('Gittata [cm]');
+title('Confronto Modello Teorico vs Dati Sperimentali');
+legend('Location', 'bottom');
+hold off;

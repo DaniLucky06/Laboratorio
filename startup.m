@@ -1,3 +1,4 @@
+addpath(genpath(pwd))
 
 % Some useful variables
     g = 9.806;                    % Gravitational acceleration

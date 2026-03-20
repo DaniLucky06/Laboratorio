@@ -3,7 +3,7 @@ clear
 clc
 
 % Eseguo i calcoli necessari
-run('/Users/giacomovanzelli/MATLAB/Esperienza proietto/calcoli.m');
+run('calcoli_proietto.m');
 
 % --- SENZA FIT --- %
 

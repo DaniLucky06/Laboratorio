@@ -3,7 +3,7 @@ clear
 clc
 
 % Eseguo i calcoli necessari
-run('/Users/giacomovanzelli/MATLAB/Esperienza pendolo/calcoli.m');
+run('calcoli_pendolo.m');
 
 % --- SENZA FIT --- %
 figure;
