@@ -67,7 +67,7 @@ sigma_U_mg = sqrt((dU_mg_dg_med .* err_tot).^2 + (dU_mg_da .* err_ris_a).^2 + (d
 U_mg_med = mean(U_mg);
 
 % Incertezza su U_mg medio
-sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)); % da rssq, che è un addon, a sqrt(dot())
+sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)) ./ 3; % da rssq, che è un addon, a sqrt(dot())
 
 % Gittata considerando U_mg -- FUNZIONE -> PRENDE UN ARRAY O UNO SCALARE IN
 % INPUT

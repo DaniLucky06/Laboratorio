@@ -11,8 +11,8 @@ col3 = 'red';
 alpha2 = .4;
 alpha3 = .4;
 
-limiti_x = [0, 90];
-limiti_y = [110, 162];
+limiti_x = [20, 90];
+limiti_y = [100, 162];
 
 % vogliamo plottare:
 
