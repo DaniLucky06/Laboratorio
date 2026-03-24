@@ -1,7 +1,7 @@
 addpath(genpath(pwd))
 
 % Some useful variables
-    g = 9.806;                    % Gravitational acceleration
+    g = 9.80655;                    % Gravitational acceleration
    
     c     = 299792458;            % Speed of light in vacuum
     G     = 6.6742867e-11;        % Newtonian constant of gravitation

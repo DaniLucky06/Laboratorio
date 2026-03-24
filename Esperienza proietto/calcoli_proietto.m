@@ -67,7 +67,7 @@ sigma_U_mg = sqrt((dU_mg_dg_med .* err_tot).^2 + (dU_mg_da .* err_ris_a).^2 + (d
 U_mg_med = mean(U_mg);
 
 % Incertezza su U_mg medio
-sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)); % da rssq, che è un addon, a sqrt(dot())
+sigma_U_mg_med = sqrt(dot(sigma_U_mg, sigma_U_mg)) ./ 3; % da rssq, che è un addon, a sqrt(dot())
 
 % Gittata considerando U_mg -- FUNZIONE -> PRENDE UN ARRAY O UNO SCALARE IN
 % INPUT
@@ -76,6 +76,10 @@ g_teo = @(theta) 2 .* sin(2 .* theta) .* (U_mg_med - dx .* sin(theta));
 % Incertezza gittata teorica -- FUNZIONE -> PRENDE UN ARRAY O UNO SCALARE
 % IN INPUT
 sigma_g_teo = @(theta) 2 .* sin(2 .* theta) .* sigma_U_mg_med;
+
+v0 = sqrt(g .* g_med ./ sin(2 .* angoli));
+
+sigma_v0 = sqrt((1 ./ (2 .* g_med) .* v0 .* err_tot).^2 + (1 ./ tan(2 .* angoli) .* v0 .* err_ris_a).^2);
 
 
 % --- SEZIONE RIGUARDO ALLA CORREZIONE DELL'ANGOLO --- %
@@ -116,3 +120,15 @@ delta_optimal = fzero(fun, 0);
 % error = @(delta) dot(U_delta(delta) - U_med_delta(delta), U_delta(delta) - U_med_delta(delta));
 % 
 % delta_optimal = fminunc(error, 0)
+
+% % --- SEZIONE RIGUARDO ALLA CORREZIONE DELL'ALTEZZA FINALE --- %
+% U_dh = @(offset) g_med.^2 ./ (g_med .* sin(2 .* angoli) - 2 .* offset .* (cos(angoli)).^2) + 2 .* dx .* sin(angoli);
+% 
+% 
+% U_dh_1 = @(offset) 2 .* g_med.^2 .* cos(angoli).^2 ./ (g_med .* sin(2 .* angoli) - 2 .* offset .* cos(angoli).^2).^2;
+% U_dh_1_mean = @(offset) mean(U_dh_1(offset));
+% 
+% 
+% U_zero = @(offset) dot(U_dh(offset) - mean(U_dh(offset)), U_dh_1(offset) - U_dh_1_mean(offset));
+% 
+% dy_optimal = fzero(U_zero, 0)
